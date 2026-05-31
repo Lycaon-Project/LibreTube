@@ -27,6 +27,7 @@ import java.io.File
 import java.nio.file.Path
 
 object ImageHelper {
+
     private lateinit var imageLoader: ImageLoader
 
     private val Context.coilFile get() = cacheDir.resolve("coil")
@@ -36,15 +37,18 @@ object ImageHelper {
      * Initialize the image loader
      */
     fun initializeImageLoader(context: Context) {
-        val maxCacheSize = PreferenceHelper.getString(PreferenceKeys.MAX_IMAGE_CACHE, "128")
+        val maxCacheSize = PreferenceHelper.getString(
+            PreferenceKeys.MAX_IMAGE_CACHE,
+            "128"
+        )
 
         val httpClient = OkHttpClient().newBuilder()
 
+        @Suppress("KotlinConstantConditions")
         if (BuildConfig.DEBUG) {
             val loggingInterceptor = HttpLoggingInterceptor().apply {
                 level = HttpLoggingInterceptor.Level.BASIC
             }
-
             httpClient.addInterceptor(loggingInterceptor)
         }
 
@@ -96,12 +100,10 @@ object ImageHelper {
     fun loadImage(url: String?, target: ImageView, whiteBackground: Boolean = false) {
         if (url.isNullOrEmpty()) return
 
-        // clear image to avoid loading issues at fast scrolling
         target.setImageBitmap(null)
 
         val urlToLoad = ProxyHelper.rewriteUrlUsingProxyPreference(url)
 
-        // only load online images if the data saver mode is disabled
         if (DataSaverMode.isEnabled(target.context)) {
             if (urlToLoad.startsWith(HTTP_SCHEME) && !isCached(urlToLoad)) return
         }
@@ -109,8 +111,9 @@ object ImageHelper {
         target.load(urlToLoad) {
             listener(
                 onSuccess = { _, _ ->
-                    // set the background to white for transparent images
-                    if (whiteBackground) target.setBackgroundColor(Color.WHITE)
+                    if (whiteBackground) {
+                        target.setBackgroundColor(Color.WHITE)
+                    }
                 }
             )
         }
@@ -118,6 +121,7 @@ object ImageHelper {
 
     suspend fun downloadImage(context: Context, url: String, path: Path) {
         val bitmap = getImage(context, url) ?: return
+
         withContext(Dispatchers.IO) {
             context.contentResolver.openOutputStream(path.toAndroidUri())?.use {
                 bitmap.compress(Bitmap.CompressFormat.PNG, 25, it)
@@ -139,10 +143,11 @@ object ImageHelper {
 
     /**
      * Get a squared bitmap with the same width and height from a bitmap
-     * @param bitmap The bitmap to resize
      */
+    @Suppress("unused")
     fun getSquareBitmap(bitmap: Bitmap): Bitmap {
         val newSize = minOf(bitmap.width, bitmap.height)
+
         return Bitmap.createBitmap(
             bitmap,
             (bitmap.width - newSize) / 2,

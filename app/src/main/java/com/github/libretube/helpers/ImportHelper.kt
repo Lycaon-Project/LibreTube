@@ -27,7 +27,6 @@ import com.github.libretube.obj.YouTubeWatchHistoryFileItem
 import com.github.libretube.ui.dialogs.ShareDialog.Companion.YOUTUBE_FRONTEND_URL
 import com.github.libretube.util.TextUtils
 import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.decodeFromStream
 import kotlinx.serialization.json.encodeToStream
 import java.util.stream.Collectors
