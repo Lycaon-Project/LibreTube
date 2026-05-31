@@ -158,6 +158,6 @@ object PreferenceHelper {
         if (getString(PreferenceKeys.REGION, "sys") == "sys") getDetectedCountry(context).uppercase()
         else getString(PreferenceKeys.REGION, "sys")
 
-    // --- Helpers ---
+    // -- Helpers --
     private fun Float.roundToNearestQuarter() = (this * 4).roundToInt() / 4f
 }

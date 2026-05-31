@@ -747,14 +747,6 @@ object PlayerHelper {
             C.TRACK_TYPE_TEXT
         )
     }
-
-    fun getCurrentVideoFormat(player: Player): Format? {
-        return getCurrentFormatByTrackType(
-            player,
-            C.TRACK_TYPE_VIDEO
-        )
-    }
-
     fun getSubtitleRoleFlags(subtitle: Subtitle?): Int {
 
         if (subtitle?.code == null) {
