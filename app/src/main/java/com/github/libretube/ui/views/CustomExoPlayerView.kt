@@ -1095,9 +1095,6 @@ class CustomExoPlayerView(
             player.currentTracks.groups,
             false
         )
-        val audioLanguages = audioLanguagesAndRoleFlags.map {
-            PlayerHelper.getAudioTrackNameFromFormat(context, it)
-        }
         val baseBottomSheet = BaseBottomSheet()
 
         if (audioLanguagesAndRoleFlags.isEmpty() || (audioLanguagesAndRoleFlags.size == 1 &&
@@ -1117,10 +1114,14 @@ class CustomExoPlayerView(
             )
         } else {
             baseBottomSheet.setSimpleItems(
-                audioLanguages,
-                preselectedItem = selectedAudioLanguageAndRoleFlags?.let {
+                audioLanguagesAndRoleFlags
+                // audio tracks have only a single flag set
+                // ordered by main, dubbed, audio descriptive
+                .sortedBy { it.second }
+                .map {
                     PlayerHelper.getAudioTrackNameFromFormat(context, it)
                 },
+                preselectedItem = getCurrentAudioTrackTitle(),
             ) { index ->
                 val selectedAudioFormat = audioLanguagesAndRoleFlags[index]
                 player.sendCustomCommand(
