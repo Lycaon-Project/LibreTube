@@ -2,6 +2,209 @@
   <img src="assets/banners/gh-banner.png" width="auto" height="auto" alt="LibreTube">
 
 [![GPL-v3](assets/widgets/license-widget.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)
+</div>
+
+<div align="center" style="width:100%; display:flex; justify-content:space-between;">
+
+[![GitHub](assets/widgets/gh-widget.svg)](https://github.com/Lycaon-Project/LibreTube)
+
+</div>
+
+> **Note** <br>
+> This is a fork of [LibreTube](https://github.com/libre-tube/LibreTube) maintained by Lycaon-Project. For the official project, please visit the original repository.
+
+</div>
+
+<div align="center" style="width:100%; display:flex; justify-content:space-between;">
+
+[<img src="assets/badges/ghload.png" alt="Get it on GitHub" width="30%">](https://github.com/Lycaon-Project/LibreTube/releases/latest)
+[<img src="assets/badges/ghload-nightly.png" alt="Get it on GitHub (Nightly)" width="30%">](https://github.com/Lycaon-Project/LibreTube/releases/tag/nightly)
+
+</div>
+
+> **Note about Nightly builds** <br>
+> Nightly builds include features/fixes before the official release. Therefore, they are generally less stable than normal releases. Use nightly builds at your own risk.
+
+<details>
+  <summary>📜️ Credits</summary>
+
+<sub>Original LibreTube Project by [libre-tube](https://github.com/libre-tube)</sub> <br>
+<sub>Readme Design and Banners by [XelXen](https://github.com/XelXen)</sub> <br>
+<sub>Readme Screenshots by [ARBoyGo](https://github.com/ARBoyGo)</sub> <br>
+<sub>Readme Emoji is from [openmoji](https://openmoji.org)</sub>
+
+  <summary>Icons</summary>
+
+<sub>[Default App Icon](https://github.com/Lycaon-Project/LibreTube/blob/master/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png) by [XelXen](https://github.com/XelXen)</sub> <br>
+<sub>[Boosted Bird](https://github.com/Lycaon-Project/LibreTube/blob/master/app/src/main/res/mipmap-xxxhdpi/ic_bird_round.png) by [Margot Albert-Heuzey](https://margotdesign.ovh)</sub>
+
+</details>
+
+<h2 align="left">
+<sub>
+<img  src="assets/readme/about.svg"
+      height="30"
+      width="30">
+</sub>
+About
+</h2>
+
+YouTube has an extremely invasive [privacy policy](https://support.google.com/youtube/answer/10364219) which relies on using user data in unethical ways. They store a lot of your personal data - ranging from ideas, music taste, content, political opinions, and much more than you think.
+
+LibreTube aims at improving the users' privacy by being independent from Google and bypassing their data collection as much as possible. The app only sends the minimum amount of data necessary to ensure that the app works, e.g. it only loads the YouTube-video you want to play without tracking your behavior when using the app.
+
+**This fork** focuses on performance optimizations, bug fixes, and modernization of the codebase while maintaining the original project's privacy-first philosophy.
+
+If you have questions or need help, please make sure to read the [FAQ](https://libre-tube.github.io/#faq) before opening an issue.
+
+<h2 align="left">
+<sub>
+<img  src="assets/readme/phone.svg"
+      height="30"
+      width="30">
+</sub>
+Screenshots
+</h2>
+
+<div style="width:100%; display:flex; justify-content:space-between;">
+
+[<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/Screenshot_1.jpg" width=19% alt="Home">](fastlane/metadata/android/en-US/images/phoneScreenshots/Screenshot_1.jpg)
+[<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/Screenshot_2.jpg" width=19% alt="Home">](fastlane/metadata/android/en-US/images/phoneScreenshots/Screenshot_2.jpg)
+[<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/Screenshot_3.jpg" width=19% alt="Subscriptions">](fastlane/metadata/android/en-US/images/phoneScreenshots/Screenshot_3.jpg)
+[<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/Screenshot_4.jpg" width=19% alt="Library">](fastlane/metadata/android/en-US/images/phoneScreenshots/Screenshot_4.jpg)
+[<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/Screenshot_9.jpg" width=19% alt="Channel Overview">](fastlane/metadata/android/en-US/images/phoneScreenshots/Screenshot_9.jpg)
+
+* More screenshots can be found [here](https://github.com/Lycaon-Project/LibreTube/blob/master/SCREEN_SHOT.md)
+
+</div>
+
+<h2 align="left">
+<sub>
+<img  src="assets/readme/feature.svg"
+      height="30"
+      width="30">
+</sub>
+Features
+</h2>
+
+### Original Features
+- [x] No Ads or Tracking
+- [x] Subscriptions
+- [x] Subscription Groups
+- [x] User Playlists
+- [x] Playlist Bookmarks
+- [x] Watch/Search History
+- [x] Downloads
+- [x] Background playback
+- [x] User Accounts via [Piped](https://github.com/TeamPiped/Piped) (optional)
+- [x] [SponsorBlock](https://sponsor.ajay.app/) - skip sponsored segments in videos
+- [x] [ReturnYouTubeDislike](https://www.returnyoutubedislike.com/) - provides video dislike statistics
+- [x] [DeArrow](https://dearrow.ajay.app/) - provides better titles and thumbnails
+
+### Fork-Specific Improvements
+- [x] **Performance optimizations** for 120Hz displays
+- [x] **Reduced memory usage** with Kotlin sequences
+- [x] **Modern Kotlin code** with updated best practices
+- [x] **Bug fixes** and stability improvements
+- [x] **Android 14+ compatibility** for foreground services
+- [x] **Code cleanup** and warning fixes
+
+<h2 align="left">
+<sub>
+<img  src="assets/readme/community.svg"
+      height="30"
+      width="30">
+</sub>
+Contributing
+</h2>
+
+Whether you have ideas, translations, design changes, code cleaning or really heavy code changes, help is always welcome. The more is done, the better it gets!
+
+### Contributing to this fork
+If you want to contribute to **this fork**, please:
+1. Open an issue to discuss your changes before implementing them
+2. Follow the existing code style and conventions
+3. Test your changes thoroughly
+4. Submit a pull request with a clear description
+
+### Contributing to the original project
+For contributions to the **original LibreTube project**, please visit [libre-tube/LibreTube](https://github.com/libre-tube/LibreTube) and follow their contribution guidelines.
+
+Please make sure the title of your pull request and the commit messages follow the [conventional commit types](https://github.com/commitizen/conventional-commit-types/blob/master/index.json) (e.g. `feat: support for xy`).
+For instance, the most common commit types are "feat", "fix", "refactor", "ci" and "chore".
+
+> [!NOTE]
+> Any issue avoiding the issue template will be ignored and forced to be closed.
+
+<h2 align="left">
+<sub>
+<img  src="assets/readme/donate.svg"
+      height="30"
+      width="30">
+</sub>
+Support the Project
+</h2>
+
+### Support the Original Project
+Donations to the original LibreTube developer can be made at:
+* <https://github.com/sponsors/Bnyro>
+* <https://liberapay.com/Bnyro>
+
+Contributions in any form are welcome!
+
+<h2 align="left">
+📝 Translations
+</h2>
+
+<a href="https://hosted.weblate.org/projects/libretube/#languages">
+<img src="https://hosted.weblate.org/widgets/libretube/-/287x66-grey.png" alt="Translation status" />
+</a>
+
+<h2 align="left">
+<sub>
+<img  src="assets/readme/ltvnp.svg"
+      height="30"
+      width="30">
+</sub>
+Differences to NewPipe
+</h2>
+
+LibreTube's main difference to NewPipe is that it has a much stronger focus on user experience. LibreTube uses the modern [Material 3 Expressive](https://m3.material.io) design, supports external APIs such as SponsorBlock, ReturnYouTubeDislike, or DeArrow, and allows you to synchronize your user data across devices, e.g. via Piped.
+
+While LibreTube only supports content from YouTube, NewPipe also allows the use of other platforms like SoundCloud, PeerTube, Bandcamp and media.ccc.de.
+
+Both, LibreTube and NewPipe, are great clients for watching YouTube videos. There's no general answer about which one is better, just try them both and see which one fits you best.
+
+<h2 align="left">
+<sub>
+<img  src="assets/readme/privacy.svg"
+      height="30"
+      width="30">
+</sub>
+Privacy Policy and Disclaimer
+</h2>
+
+LibreTube aims to protect the privacy of its users. [Our Privacy Policy](/PRIVACY_POLICY.md) gives detailed information on which data the app stores in order to work, how it is being used, and how the project protects your personal information. It is recommended to read the privacy policy of LibreTube as well as the privacy policy of the instance you have chosen inside the app.
+
+## Acknowledgments
+
+This project is a fork of [LibreTube](https://github.com/libre-tube/LibreTube) and builds upon the excellent work of the original developers and contributors. We are grateful for their contributions to the open-source community.
+
+## License
+[![GNU GPLv3 Image](https://www.gnu.org/graphics/gplv3-127x51.png)](http://www.gnu.org/licenses/gpl-3.0.en.html)
+
+LibreTube is [Free Software](https://en.wikipedia.org/wiki/Free_software): You can use, study, share and modify it at your will. The app can be redistributed and/or modified under the terms of the
+[GNU General Public License version 3 or later](https://www.gnu.org/licenses/gpl.html) published by the 
+[Free Software Foundation](https://www.fsf.org/).
+
+<div align="right">
+<table><td>
+<a href="#start-of-content">↥ Scroll to top</a>
+</td></table>
+</div><div align="center">
+  <img src="assets/banners/gh-banner.png" width="auto" height="auto" alt="LibreTube">
+
+[![GPL-v3](assets/widgets/license-widget.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)
 </div><div align="center" style="width:100%; display:flex; justify-content:space-between;">
 
 [![Matrix](assets/widgets/mat-widget.svg)](https://matrix.to/#/#LibreTube:matrix.org)
