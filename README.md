@@ -127,10 +127,9 @@ Features
 ### 🚀 Fork-Specific Optimizations
 
 - ⚡ **120Hz Display Support** - Ultra-smooth scrolling and animations
-- 🧠 **Optimized Memory Usage** - Efficient resource management with Kotlin sequences
 - 🔄 **Modern Kotlin Code** - Updated to latest best practices and APIs
 - 🐛 **Comprehensive Bug Fixes** - Improved stability and reliability
-- 📱 **Android 14+ Ready** - Full compatibility with latest Android requirements
+- 📱 **Android 15+ Ready** - Full compatibility with latest Android requirements
 - 🎨 **Enhanced Performance** - Faster app startup and smoother interactions
 
 ---
