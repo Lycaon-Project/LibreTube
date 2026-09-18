@@ -33,20 +33,46 @@ class UpdateChecker(private val context: Context) {
     }
 
     /**
-     * Parse version string to comparable integer
-     * Example: "0.21.1" -> 211, "1.2.3" -> 123
+     * Parse version string to comparable integer using weighted algorithm
+     * Examples:
+     *   "0.26.1" -> 26001
+     *   "1.2.3"  -> 1002003
+     *   "10.0.0" -> 10000000
+     *
+     * This ensures correct comparison even with multi-digit version numbers
      */
     private fun parseVersionToCode(versionName: String): Int {
         return try {
-            val cleanVersion = versionName.filter { char -> char.isDigit() }
-            if (cleanVersion.isNotEmpty()) {
-                cleanVersion.toInt()
+            val cleanVersion = versionName.trim()
+
+            // Try semantic versioning first (e.g., "0.26.1")
+            val parts = cleanVersion.split(".")
+            if (parts.size >= 2) {
+                var code = 0
+                var multiplier = 1000000  // Start with high multiplier
+
+                for (part in parts.take(3)) {  // Max 3 parts: major.minor.patch
+                    val number = part.filter { it.isDigit() }.toIntOrNull() ?: 0
+                    code += number * multiplier
+                    multiplier /= 1000  // Decrease multiplier for next part
+                }
+
+                return code
+            }
+
+            // Fallback: extract all digits
+            val digits = cleanVersion.filter { it.isDigit() }
+            if (digits.isNotEmpty()) {
+                digits.toIntOrNull() ?: 0
             } else {
                 Log.w(TAG(), "Failed to parse version: $versionName")
                 0
             }
         } catch (e: NumberFormatException) {
             Log.w(TAG(), "Failed to parse version: $versionName", e)
+            0
+        } catch (e: Exception) {
+            Log.e(TAG(), "Unexpected error parsing version: $versionName", e)
             0
         }
     }
@@ -58,7 +84,7 @@ class UpdateChecker(private val context: Context) {
         if (currentAppVersion == 0) {
             Log.e(TAG(), "Failed to determine current app version")
             if (isManualCheck) {
-                context.toastFromMainDispatcher(R.string.error)
+                context.toastFromMainDispatcher(R.string.error_occurred)
             }
             return
         }
@@ -69,8 +95,14 @@ class UpdateChecker(private val context: Context) {
             }
 
             val latestVersionName = response.name
-            if (latestVersionName.isEmpty()) {  // ✅ .isEmpty() au lieu de .isNullOrEmpty()
+
+            // ✅ CORRECTION : isEmpty() au lieu de isNullOrEmpty()
+            // car response.name est de type String non-nullable
+            if (latestVersionName.isEmpty()) {
                 Log.w(TAG(), "Latest release has no version name")
+                if (isManualCheck) {
+                    context.toastFromMainDispatcher(R.string.error_occurred)
+                }
                 return
             }
 
@@ -79,53 +111,89 @@ class UpdateChecker(private val context: Context) {
             if (latestVersionCode == 0) {
                 Log.w(TAG(), "Failed to parse latest version: $latestVersionName")
                 if (isManualCheck) {
-                    context.toastFromMainDispatcher(R.string.error)
+                    context.toastFromMainDispatcher(R.string.error_occurred)
                 }
                 return
             }
 
-            // Compare versions
-            if (currentAppVersion != latestVersionCode) {
-                Log.i(TAG(), "Update available: current=$currentAppVersion, latest=$latestVersionCode")
-
-                withContext(Dispatchers.Main) {
-                    // ✅ Accès direct sans .orEmpty() car les types sont non-null
-                    showUpdateAvailableDialog(
-                        response.body,
-                        response.htmlUrl
+            // ✅ CORRECTION CRITIQUE : Utiliser < au lieu de != pour ne proposer
+            // une mise à jour que si la version GitHub est PLUS RÉCENTE
+            when {
+                currentAppVersion < latestVersionCode -> {
+                    Log.i(
+                        TAG(),
+                        "Update available: current=$currentAppVersion ($currentVersionName), " +
+                                "latest=$latestVersionCode ($latestVersionName)"
                     )
+
+                    withContext(Dispatchers.Main) {
+                        showUpdateAvailableDialog(
+                            response.body,
+                            response.htmlUrl
+                        )
+                    }
                 }
-            } else if (isManualCheck) {
-                Log.i(TAG(), "App is up to date (version $currentAppVersion)")
-                context.toastFromMainDispatcher(R.string.app_uptodate)
+
+                currentAppVersion > latestVersionCode -> {
+                    Log.i(
+                        TAG(),
+                        "Running newer version than GitHub release: " +
+                                "current=$currentAppVersion, latest=$latestVersionCode"
+                    )
+                    if (isManualCheck) {
+                        context.toastFromMainDispatcher(R.string.app_uptodate)
+                    }
+                }
+
+                else -> {
+                    Log.i(TAG(), "App is up to date (version $currentAppVersion)")
+                    if (isManualCheck) {
+                        context.toastFromMainDispatcher(R.string.app_uptodate)
+                    }
+                }
+            }
+        } catch (e: retrofit2.HttpException) {
+            Log.e(TAG(), "HTTP error during update check: ${e.code()} - ${e.message()}", e)
+            if (isManualCheck) {
+                context.toastFromMainDispatcher(R.string.error_occurred)
+            }
+        } catch (e: java.net.UnknownHostException) {
+            Log.e(TAG(), "No internet connection during update check", e)
+            if (isManualCheck) {
+                context.toastFromMainDispatcher(R.string.turnInternetOn)
+            }
+        } catch (e: java.net.SocketTimeoutException) {
+            Log.e(TAG(), "Timeout during update check", e)
+            if (isManualCheck) {
+                context.toastFromMainDispatcher(R.string.error_occurred)
             }
         } catch (e: Exception) {
             Log.e(TAG(), "Failed to check for updates", e)
             if (isManualCheck) {
-                context.toastFromMainDispatcher(R.string.error)
+                context.toastFromMainDispatcher(R.string.error_occurred)
             }
         }
     }
 
     private fun showUpdateAvailableDialog(
-        changelog: String,
-        url: String
+        changelog: String?,
+        url: String?
     ) {
         // Validate URL for security
-        if (!isValidUrl(url)) {
-            Log.w(TAG(), "Invalid update URL: $url")
+        if (url == null || !isValidUrl(url)) {
+            Log.w(TAG(), "Invalid or null update URL: $url")
             return
         }
 
         val dialog = UpdateAvailableDialog()
         val args = Bundle().apply {
-            putString(appUpdateChangelog, sanitizeChangelog(changelog))
+            putString(appUpdateChangelog, sanitizeChangelog(changelog ?: ""))
             putString(appUpdateURL, url)
         }
         dialog.arguments = args
 
         val fragmentManager = (context as? FragmentActivity)?.supportFragmentManager
-        if (fragmentManager != null) {  // ✅ Vérification explicite au lieu de ? let
+        if (fragmentManager != null) {
             dialog.show(fragmentManager, UpdateAvailableDialog::class.java.simpleName)
         } else {
             Log.w(TAG(), "Cannot show dialog: context is not a FragmentActivity")
@@ -134,6 +202,7 @@ class UpdateChecker(private val context: Context) {
 
     /**
      * Validate URL to prevent malicious redirects
+     * Only allows HTTPS URLs from GitHub domain
      */
     private fun isValidUrl(url: String): Boolean {
         if (url.isBlank()) return false
@@ -153,6 +222,10 @@ class UpdateChecker(private val context: Context) {
         }
     }
 
+    /**
+     * Sanitize changelog text for display in the dialog
+     * Removes GitHub-specific formatting and cleans up the text
+     */
     private fun sanitizeChangelog(changelog: String): String {
         if (changelog.isBlank()) return ""
 

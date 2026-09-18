@@ -6,12 +6,19 @@ plugins {
     alias(libs.plugins.kotlin.serialization) apply false
 }
 
+// ✅ CORRECTION 1 : Ajout description et groupe pour la tâche clean
 tasks.register<Delete>("clean") {
+    description = "Deletes the build directory and all generated files"
+    group = "build"
     delete(rootProject.layout.buildDirectory)
 }
 
+// ✅ CORRECTION 2 : Ajout description et groupe pour la tâche buildLanguages
 // this builds the list of languages to use for Android versions below 13
 tasks.register("buildLanguages") {
+    description = "Generates the languages.xml file with all available locales"
+    group = "build"
+
     val projectDirectory = layout.projectDirectory
 
     // reference: https://docs.gradle.org/current/userguide/working_with_files.html

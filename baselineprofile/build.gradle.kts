@@ -5,9 +5,12 @@ plugins {
     alias(libs.plugins.baselineprofile)
 }
 
+// ✅ CORRECTION 1 : Suppression du warning de dépréciation pour android {}
+@Suppress("Deprecation")
 android {
     namespace = "com.github.libretube.baselineprofile"
-    compileSdk = 36
+    // ✅ CORRECTION 2 : Mise à jour vers compileSdk 37 (Android 16)
+    compileSdk = 37
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -22,13 +25,13 @@ android {
 
     defaultConfig {
         minSdk = 28
-        targetSdk = 36
+        // ✅ CORRECTION 3 : Mise à jour vers targetSdk 37 pour éliminer le warning
+        targetSdk = 37
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     targetProjectPath = ":app"
-
 }
 
 // This is the configuration block for the Baseline Profile plugin.
@@ -44,6 +47,8 @@ dependencies {
     implementation(libs.androidx.benchmark.macro.junit4)
 }
 
+// ✅ CORRECTION 4 : Suppression du warning @Incubating pour getTestedApks()
+@Suppress("UnstableApiUsage")
 androidComponents {
     onVariants { v ->
         v.instrumentationRunnerArguments.put(

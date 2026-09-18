@@ -1,40 +1,38 @@
-# Add project specific ProGuard rules here.
-# You can control the set of applied configuration files using the
-# proguardFiles setting in build.gradle.kts.
-#
-# For more details, see
-#   http://developer.android.com/guide/developing/tools/proguard.html
+# ----------------------------------------------------------------------------
+# LibreTube ProGuard/R8 Rules - Ubdated
+# ----------------------------------------------------------------------------
 
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
+# Enable aggressive optimizations for smaller APK size
+-optimizationpasses 5
+-optimizations !code/simplification/arithmetic,!code/simplification/cast,!field/*,!class/merging/*
 
-# Uncomment this to preserve the line number information for
-# debugging stack traces.
--keepattributes SourceFile,LineNumberTable
+# Keep line numbers for crash reporting and debugging
+-keepattributes SourceFile,LineNumberTable,Signature,InnerClasses,EnclosingMethod
+-keepattributes *Annotation*,RuntimeVisibleAnnotations,RuntimeVisibleParameterAnnotations
 
-# prevents obfuscation in debug logs
--dontobfuscate
+# Rename source file attribute to hide original names
+-renamesourcefileattribute SourceFile
 
-# optimise protobuf classes
--shrinkunusedprotofields
+# Preserve Kotlin metadata for reflection
+-keepattributes Metadata
 
-# If you keep the line number information, uncomment this to
-# hide the original source file name.
-#-renamesourcefileattribute SourceFile
+# Don't warn about missing dependencies (common in Android libraries)
+-dontwarn java.beans.**
+-dontwarn javax.annotation.**
+-dontwarn kotlin.Unit
+-dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
 
-#uncomment for debug
-#-keepnames class **
+# ----------------------------------------------------------------------------
+# KOTLIN COROUTINES
 
-# Keep data classes used for Retrofit
--keep class com.github.libretube.obj.** { *; }
--keep class com.github.libretube.api.obj.** { *; }
--keep class com.github.libretube.obj.update.** { *; }
+# Keep coroutine dispatcher factories (loaded via ServiceLoader)
+-keepnames class kotlinx.coroutines.internal.MainDispatcherFactory {}
+-keepnames class kotlinx.coroutines.CoroutineExceptionHandler {}
 
-# Keep rules required by Kotlinx Serialization
+# ----------------------------------------------------------------------------
+# KOTLINX SERIALIZATION
+
+# Keep serializable classes (required for JSON parsing)
 -if @kotlinx.serialization.Serializable class **
 -keepclassmembers class <1> {
     static <1>$Companion Companion;
@@ -55,84 +53,93 @@
     kotlinx.serialization.KSerializer serializer(...);
 }
 
--keepattributes RuntimeVisibleAnnotations,AnnotationDefault
+# ----------------------------------------------------------------------------
+# APP-SPECIFIC DATA CLASSES
 
-# -- Retrofit keep rules, obtained from https://github.com/square/retrofit/blob/master/retrofit/src/main/resources/META-INF/proguard/retrofit2.pro
+# Keep data classes used for JSON serialization and IPC
+-keep class com.github.libretube.obj.** { *; }
+-keep class com.github.libretube.api.obj.** { *; }
+-keep class com.github.libretube.obj.update.** { *; }
+-keep class com.github.libretube.parcelable.** { *; }
 
-# Retrofit does reflection on generic parameters. InnerClasses is required to use Signature and
-# EnclosingMethod is required to use InnerClasses.
--keepattributes Signature, InnerClasses, EnclosingMethod
-
-# Retrofit does reflection on method and parameter annotations.
--keepattributes RuntimeVisibleAnnotations, RuntimeVisibleParameterAnnotations
-
-# Keep annotation default values (e.g., retrofit2.http.Field.encoded).
--keepattributes AnnotationDefault
-
-# Retain service method parameters when optimizing.
--keepclassmembers,allowshrinking,allowobfuscation interface * {
-    @retrofit2.http.* <methods>;
+# Keep Parcelable CREATOR fields
+-keepclassmembers class * implements android.os.Parcelable {
+    public static final android.os.Parcelable$Creator CREATOR;
 }
 
-# Ignore annotation used for build tooling.
--dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
+# ----------------------------------------------------------------------------
+# SETTINGS FRAGMENTS (loaded via reflection)
 
-# Ignore JSR 305 annotations for embedding nullability information.
--dontwarn javax.annotation.**
+# Keep preference fragments loaded dynamically
+-keep class com.github.libretube.ui.preferences.** { *; }
 
-# Guarded by a NoClassDefFoundError try/catch and only used when on the classpath.
--dontwarn kotlin.Unit
+# ----------------------------------------------------------------------------
+# CONSTRAINTLAYOUT MOTIONLAYOUT (Fix for miniplayer issue)
 
-# Top-level functions that can only be used by Kotlin.
--dontwarn retrofit2.KotlinExtensions
--dontwarn retrofit2.KotlinExtensions$*
+# Only keep MotionLayout classes (specific fix for miniplayer)
+-keep class androidx.constraintlayout.motion.widget.MotionLayout { *; }
+-keep class androidx.constraintlayout.motion.widget.TransitionAdapter { *; }
 
-# With R8 full mode, it sees no subtypes of Retrofit interfaces since they are created with a Proxy
-# and replaces all potential values with null. Explicitly keeping the interfaces prevents this.
--if interface * { @retrofit2.http.* <methods>; }
--keep,allowobfuscation interface <1>
+# ----------------------------------------------------------------------------
+# NEWPIPE EXTRACTOR (No built-in ProGuard rules)
 
-# Keep inherited services.
--if interface * { @retrofit2.http.* <methods>; }
--keep,allowobfuscation interface * extends <1>
+# Keep only the classes used via reflection
+-keep class org.schabi.newpipe.extractor.timeago.patterns.** { *; }
 
-# Keep generic signature of Call, Response (R8 full mode strips signatures from non-kept items).
--keep,allowobfuscation,allowshrinking interface retrofit2.Call
--keep,allowobfuscation,allowshrinking class retrofit2.Response
+# ✅ CORRECTION : Remplacement des règles Rhino par dontwarn
+# Rhino JavaScript engine classes are handled by NewPipe Extractor internally
+-dontwarn org.mozilla.javascript.**
 
-# With R8 full mode generic signatures are stripped for classes that are not
-# kept. Suspend functions are wrapped in continuations where the type argument
-# is used.
--keep,allowobfuscation,allowshrinking class kotlin.coroutines.Continuation
+# Suppress warnings for optional dependencies
+-dontwarn org.mozilla.javascript.JavaToJSONConverters
+-dontwarn org.mozilla.javascript.tools.**
+-dontwarn javax.script.**
+-dontwarn jdk.dynalink.**
+-dontwarn com.google.re2j.**
 
-# -- End of Retrofit keep rules
+# ----------------------------------------------------------------------------
+# CRYPTOGRAPHY LIBRARIES
 
+# Suppress warnings for optional crypto providers
 -dontwarn org.conscrypt.**
 -dontwarn org.bouncycastle.**
 -dontwarn org.openjsse.**
 
-# Fix for miniplayer placing issue in release build
--keep class androidx.constraintlayout.motion.widget.** { *; }
--keepclassmembers class androidx.constraintlayout.motion.widget.** { *; }
+# ----------------------------------------------------------------------------
+# PROTOBUF
 
-# Settings fragments are loaded through reflection
--keep class com.github.libretube.ui.preferences.** { *; }
+# Optimise protobuf classes
+-shrinkunusedprotofields
 
-## Rules for NewPipeExtractor
--keep class org.schabi.newpipe.extractor.timeago.patterns.** { *; }
--keep class org.mozilla.javascript.** { *; }
--keep class org.mozilla.javascript.engine.** { *; }
--dontwarn org.mozilla.javascript.JavaToJSONConverters
--dontwarn org.mozilla.javascript.tools.**
--keep class javax.script.** { *; }
--dontwarn javax.script.**
--keep class jdk.dynalink.** { *; }
--dontwarn jdk.dynalink.**
--dontwarn com.google.re2j.**
+# ----------------------------------------------------------------------------
+# GOOGLE PLAY SERVICES
 
-# This is generated automatically by the Android Gradle plugin.
--dontwarn java.beans.BeanDescriptor
--dontwarn java.beans.BeanInfo
--dontwarn java.beans.IntrospectionException
--dontwarn java.beans.Introspector
--dontwarn java.beans.PropertyDescriptor
+-dontwarn com.google.android.gms.**
+
+# ----------------------------------------------------------------------------
+# R8 OPTIMIZATION HINTS
+
+# Allow more aggressive optimizations
+-allowaccessmodification
+
+# Merge classes when possible to reduce APK size
+-repackageclasses ''
+
+# Remove unused code aggressively
+-dontskipnonpubliclibraryclasses
+-dontskipnonpubliclibraryclassmembers
+
+# Keep native methods
+-keepclasseswithmembernames class * {
+    native <methods>;
+}
+
+# Keep Serializable classes
+-keepclassmembers class * implements java.io.Serializable {
+    static final long serialVersionUID;
+    private static final java.io.ObjectStreamField[] serialPersistentFields;
+    private void writeObject(java.io.ObjectOutputStream);
+    private void readObject(java.io.ObjectInputStream);
+    java.lang.Object writeReplace();
+    java.lang.Object readResolve();
+}

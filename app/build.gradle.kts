@@ -22,20 +22,21 @@ keyPassword=my_key_password
  */
 
 val keystoreProperties = Properties()
-val keystoreFileExists = rootProject.file("keystore.properties").exists();
+val keystoreFileExists = rootProject.file("keystore.properties").exists()
 if (keystoreFileExists) {
     keystoreProperties.load(rootProject.file("keystore.properties").inputStream())
 }
 
+@Suppress("Deprecation")
 android {
-    compileSdk = 36
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "com.github.libretube"
         minSdk = 26
-        targetSdk = 36
+        targetSdk = 37
         versionCode = 72
-        versionName = "32.1"
+        versionName = "46.u"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         resValue("string", "app_name", "LibreTube")
     }
@@ -95,7 +96,10 @@ android {
         jniLibs.excludes.add("lib/armeabi-v7a/*_neon.so")
     }
 
-    tasks.register("testClasses")
+    tasks.register("testClasses") {
+        description = "Compiles the test classes for the project"
+        group = "verification"
+    }
 
     lint {
         abortOnError = false
@@ -115,6 +119,7 @@ android {
     }
 
     // language preference for Android 13 and above
+    @Suppress("UnstableApiUsage")
     androidResources {
         generateLocaleConfig = true
     }
