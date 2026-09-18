@@ -11,7 +11,7 @@
 </div>
 
 > **📌 Important Note** <br>
-> This is an **independent fork** maintained by Lycaon-Project. While based on the original LibreTube project, this fork operates as a separate entity with its own development roadmap and focus on performance optimization and modernization.
+> This is an **independent fork** maintained by Lycaon-Project. While based on the original LibreTube project, this fork operates as a separate entity with its own development roadmap and focus on performance optimisation and modernisation.
 
 </div>
 
