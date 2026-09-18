@@ -245,7 +245,7 @@ LibreTube is [Free Software](https://en.wikipedia.org/wiki/Free_software): You c
 
 ### 🌟 Star us on GitHub if you find this project useful!
 
-**Made with ❤️ by the Lycaon-Project team**
+**Made with ❤️ by the Lycaon-Project**
 
 [⬆ Scroll to top](#libretube)
 
