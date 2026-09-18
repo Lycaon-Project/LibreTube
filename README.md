@@ -71,10 +71,9 @@ YouTube has an extremely invasive [privacy policy](https://support.google.com/yo
 
 While maintaining the original project's privacy-first philosophy, **this fork specifically focuses on**:
 
-- ⚡ **Performance Optimization** - Optimized for 120Hz displays and modern Android devices
-- 🧠 **Code Modernization** - Updated to latest Kotlin best practices and Android APIs
+- ⚡ **Performance Optimization** - Optimize for 120 Hz screens and to reduce battery consumption
 - 🐛 **Bug Fixes & Stability** - Comprehensive testing and reliability improvements
-- 📱 **Android 14+ Compatibility** - Full support for latest Android features and requirements
+- 📱 **Android 15+ Compatibility** - Full support for latest Android features and requirements
 - 🎨 **Enhanced User Experience** - Smoother animations and improved responsiveness
 
 ---
